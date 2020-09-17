@@ -1,5 +1,5 @@
 adal==1.2.4
--e git+https://github.com/Azure/azfilebackup.git@c2df682ce5c50249261864b3c969407f9825d765#egg=azfilebak
+#-e git+https://github.com/Azure/azfilebackup.git@c2df682ce5c50249261864b3c969407f9825d765#egg=azfilebak
 azure-common==1.1.25
 azure-nspkg==3.0.2
 azure-storage-blob==2.0.1
@@ -10,7 +10,8 @@ cffi==1.14.0
 chardet==3.0.4
 cryptography==2.9.2
 enum34==1.1.10
-futures==3.3.0
+#futures==3.3.0
+future==0.18.2
 idna==2.9
 ipaddress==1.0.23
 isodate==0.6.0

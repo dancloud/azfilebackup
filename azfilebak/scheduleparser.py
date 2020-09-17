@@ -5,9 +5,11 @@
 # Licensed under the MIT License.
 # --------------------------------------------------------------------------
 
+from builtins import object
 import datetime
 import re
 from .backupexception import BackupException
+from functools import reduce
 
 class ScheduleParser(object):
     """
@@ -33,7 +35,7 @@ class ScheduleParser(object):
                 "s": lambda s: datetime.timedelta(seconds=s)
             }[unit](num)
         except Exception as e:
-            raise(BackupException("Cannot parse value '{}' into duration: {}".format(time, e.message)))
+            raise BackupException("Cannot parse value '{}' into duration: {}:".format(time, str(e)))
 
     @staticmethod
     def parse_timedelta(time_val):
@@ -59,4 +61,4 @@ class ScheduleParser(object):
             durations = [ScheduleParser.__from_atom(time) for time in atoms]
             return reduce(lambda x, y: x + y, durations)
         except Exception as e:
-            raise(BackupException("Cannot parse value '{}' into duration: {}".format(time_val, e.message)))
+            raise BackupException("Cannot parse value '{}' into duration: {}:".format(time_val, str(e)))

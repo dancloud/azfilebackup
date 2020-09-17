@@ -15,7 +15,7 @@ def main():
         Runner.main()
         exit(0)
     except BackupException as be:
-        printe("{}".format(be.message))
+        printe("{}".format(str(be)))
         exit(-1)
 
 if __name__ == '__main__':

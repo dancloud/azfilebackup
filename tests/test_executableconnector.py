@@ -4,6 +4,7 @@
 # --------------------------------------------------------------------------
 
 """Unit tests for executableconnector."""
+from __future__ import print_function
 
 import os
 import subprocess
@@ -24,7 +25,7 @@ class TestExecutableConnector(LoggedTestCase):
         proc = self.connector.run_backup_command('echo')
         (_stdoutdata, stderrdata) = proc.communicate(None)
         if proc.returncode != 0:
-            print stderrdata
+            print(stderrdata)
         self.assertEqual(proc.returncode, 0)
 
     def test_assemble_backup_command(self):

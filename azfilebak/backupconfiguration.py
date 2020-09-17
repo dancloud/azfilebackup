@@ -7,6 +7,7 @@
 
 """BackupConfiguration module."""
 
+from builtins import object
 import os
 import logging
 import subprocess
@@ -58,7 +59,7 @@ class BackupConfiguration(object):
 
     def environment_value(self, name):
         """Get value from OS environment variable."""
-        if not os.environ.has_key(name):
+        if name not in os.environ:
             return None
         return os.environ[name]
 
@@ -196,7 +197,7 @@ class BackupConfiguration(object):
         """Create or return BlockBlobService client."""
         if not self._block_blob_service:
             account_name = self.get_azure_storage_account_name()
-            if os.environ.has_key('STORAGE_KEY'):
+            if 'STORAGE_KEY' in os.environ:
                 # We got the storage key through an environment variable
                 # (mostly for testing purposes)
                 self._block_blob_service = BlockBlobService(

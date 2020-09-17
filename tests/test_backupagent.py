@@ -4,6 +4,7 @@
 # --------------------------------------------------------------------------
 
 """Unit tests for backupagent."""
+from __future__ import print_function
 
 import json
 import unittest
@@ -21,7 +22,9 @@ class TestBackupAgent(LoggedTestCase):
     """Unit tests for class BackupAgent."""
 
     def setUp(self):
-        self.json_meta = open('sample_instance_metadata.json').read()
+        #self.json_meta = open('sample_instance_metadata.json').read()
+        with open('sample_instance_metadata.json') as f:
+            self.json_meta = f.read()
 
         self.meta = AzureVMInstanceMetadata(
             lambda: (json.JSONDecoder()).decode(self.json_meta)
@@ -215,7 +218,7 @@ class TestBackupAgent(LoggedTestCase):
     def test_show_configuration(self):
         """Test show_configuration."""
         conf = self.agent.show_configuration('/tmp')
-        print conf
+        print(conf)
         return True
 
     def test_backup_default(self):

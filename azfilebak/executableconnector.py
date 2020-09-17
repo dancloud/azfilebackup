@@ -9,6 +9,7 @@
 ExecutableConnector
 """
 
+from builtins import object
 import shlex
 import subprocess
 import logging

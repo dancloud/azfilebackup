@@ -1,3 +1,4 @@
+from __future__ import print_function
 # -------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License.
@@ -6,6 +7,7 @@
 import sys
 import unittest
 import logging
+from future.utils import with_metaclass
 
 # Adapted from: https://stackoverflow.com/a/15969985
 
@@ -16,7 +18,7 @@ class LogThisTestCase(type):
             setUp = dct['setUp']
         else:
             setUp = lambda self: None
-            print "creating setUp..."
+            print("creating setUp...")
 
         def wrappedSetUp(self):
             # for hdlr in self.logger.handlers:
@@ -40,9 +42,7 @@ class LogThisTestCase(type):
         # return the class instance with the replaced setUp/tearDown
         return type.__new__(cls, name, bases, dct)
 
-class LoggedTestCase(unittest.TestCase):
-    __metaclass__ = LogThisTestCase
-    # Default
+class LoggedTestCase(with_metaclass(LogThisTestCase, unittest.TestCase)):
     logging.basicConfig(level=logging.DEBUG)
     # Trim down some logs 
     logging.getLogger('azure.storage').setLevel(logging.ERROR)

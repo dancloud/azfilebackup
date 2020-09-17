@@ -7,6 +7,7 @@
 
 """Timing module."""
 
+from builtins import object
 import os
 import re
 

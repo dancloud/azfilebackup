@@ -7,6 +7,9 @@
 
 """ Timing module."""
 
+from past.builtins import cmp
+from builtins import object
+from functools import cmp_to_key
 import time
 import datetime
 import pytz
@@ -57,7 +60,7 @@ class Timing(object):
                 return Timing.time_diff_in_seconds(
                     selector(b), selector(a)) or cmp(a.get('stripe_index'), b.get('stripe_index'))
             return Timing.time_diff_in_seconds(selector(b), selector(a))
-        return sorted(times, cmp=sort_cmp)
+        return sorted(times, key=cmp_to_key(sort_cmp))
 
     @staticmethod
     def time_diff_in_seconds(timestr_1, timestr_2):

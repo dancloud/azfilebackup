@@ -5,6 +5,11 @@
 # Licensed under the MIT License.
 # --------------------------------------------------------------------------
 
+from __future__ import print_function
+from builtins import str
+from builtins import map
+from builtins import range
+from builtins import object
 import sys
 import logging
 import os
@@ -12,6 +17,7 @@ import datetime
 import json
 import subprocess
 import shlex
+import errno
 
 import azfilebak
 from azfilebak.naming import Naming
@@ -50,7 +56,7 @@ class BackupAgent(object):
                 if parts is None:
                     continue
                 start_timestamp = parts[2]
-                if not existing_blobs_dict.has_key(start_timestamp):
+                if start_timestamp not in existing_blobs_dict:
                     existing_blobs_dict[start_timestamp] = []
                 existing_blobs_dict[start_timestamp].append(blob_name)
             if results.next_marker:
@@ -92,9 +98,9 @@ class BackupAgent(object):
     def latest_backup_timestamp(self, fileset, is_full):
         """Return the timestamp for the latest backup for a given fileset."""
         existing_blobs_dict = self.existing_backups_for_fileset(fileset=fileset, is_full=is_full)
-        if not existing_blobs_dict.keys():
+        if not list(existing_blobs_dict.keys()):
             return "19000101_000000"
-        return Timing.sort(existing_blobs_dict.keys())[-1:][0]
+        return Timing.sort(list(existing_blobs_dict.keys()))[-1:][0]
 
     @staticmethod
     def should_run_full_backup(now_time, force, latest_full_backup_timestamp,
@@ -238,7 +244,7 @@ class BackupAgent(object):
                 raise BackupException("tar command failed with return code {}".format(retcode))
 
         except Exception as ex:
-            logging.error("Failed to stream blob: %s", ex.message)
+            logging.error("Failed to stream blob: %s", str(ex))
             end_timestamp = Timing.now_localtime()
             self.send_notification(
                 is_full=is_full,
@@ -247,7 +253,7 @@ class BackupAgent(object):
                 success=False,
                 blob_size=0,
                 blob_path='/' + dest_container_name + '/' + blob_name,
-                error_msg=ex.message)
+                error_msg=str(ex))
             raise ex
 
         logging.info("Finished streaming blob: %s", blob_name)
@@ -257,7 +263,7 @@ class BackupAgent(object):
         try:
             blob_props = storage_client.get_blob_properties(dest_container_name, blob_name)
         except Exception as ex:
-            logging.error("Failed to get blob size: %s", ex.message)
+            logging.error("Failed to get blob size: %s", str(ex))
 
             self.send_notification(
                 is_full=is_full,
@@ -266,7 +272,7 @@ class BackupAgent(object):
                 success=False,
                 blob_size=0,
                 blob_path='/' + dest_container_name + '/' + blob_name,
-                error_msg=ex.message)
+                error_msg=str(ex))
             raise ex
 
         # Send notification
@@ -291,7 +297,7 @@ class BackupAgent(object):
         baks_list = self.existing_backups(filesets=filesets or [], container=container)
         for (blobname, date, length) in baks_list:
             #parts = Naming.parse_blobname(blobname)
-            print '{0} {1:12} {2}'.format(date, length, blobname)
+            print('{0} {1:12} {2}'.format(date, length, blobname))
 
     #
     # Prune methods.
@@ -423,7 +429,7 @@ class BackupAgent(object):
         day_f = lambda d: [None, "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][d]
         b2s_f = lambda x: {True:"1", False:"0"}[x]
         s_f = lambda day: "business_hours_{}:                 {}".format(day_f(day), "".join(map(b2s_f, business_hours.hours[day])))
-        hours = list(map(s_f, range(1, 8)))
+        hours = list(map(s_f, list(range(1, 8))))
 
         return [
             "azure.vm_name:                      {}".format(self.backup_configuration.get_vm_name()),
@@ -480,10 +486,10 @@ class BackupAgent(object):
         cmd = self.backup_configuration.get_notification_command()
         try:
             proc = subprocess.Popen(shlex.split(cmd), stdin=subprocess.PIPE)
-            proc.communicate(json_str)
+            proc.communicate(json_str.encode('utf-8'))
         except OSError as ex:
             # Silently ignore error if notification command does not exist
-            if ex.errno == os.errno.ENOENT:
+            if ex.errno == errno.ENOENT:
                 logging.debug("Notification command %s not found", shlex.split(cmd)[0])
             else:
                 raise

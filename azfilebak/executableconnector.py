@@ -60,7 +60,7 @@ class ExecutableConnector(object):
             pv = os.path.join(path, "pv")
             if os.path.isfile(pv) and os.access(pv, os.X_OK):
                 return True
-        logging.warn("Rate limit set but pv cannot be found! Skipping rate limit")
+        logging.warning("Rate limit set but pv cannot be found! Skipping rate limit")
         return False
 
     def run_backup_command(self, command, rate=None):

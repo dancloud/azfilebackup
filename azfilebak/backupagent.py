@@ -201,7 +201,7 @@ class BackupAgent(object):
         if not self.should_run_backup(
                 fileset=fileset, is_full=is_full,
                 force=force, start_timestamp=start_timestamp):
-            logging.warn("Skipping backup of fileset %s", fileset)
+            logging.warning("Skipping backup of fileset %s", fileset)
             return
 
         # Final destination container
@@ -308,10 +308,10 @@ class BackupAgent(object):
         Delete (prune) old backups from Azure storage.
         """
         minimum_deletable_age = datetime.timedelta(7, 0)
-        logging.warn("Deleting files older than %s", older_than)
+        logging.warning("Deleting files older than %s", older_than)
         if older_than < minimum_deletable_age:
             msg = "Will not delete files younger than {}, ignoring".format(minimum_deletable_age)
-            logging.warn(msg)
+            logging.warning(msg)
             return
 
         marker = None
@@ -332,12 +332,12 @@ class BackupAgent(object):
                 delete = diff > older_than
 
                 if delete:
-                    logging.warn("Deleting %s", blob.name)
+                    logging.warning("Deleting %s", blob.name)
                     self.backup_configuration.storage_client.delete_blob(
                         container_name=self.backup_configuration.azure_storage_container_name,
                         blob_name=blob.name)
                 else:
-                    logging.warn("Keeping %s", blob.name)
+                    logging.warning("Keeping %s", blob.name)
 
             if results.next_marker:
                 marker = results.next_marker

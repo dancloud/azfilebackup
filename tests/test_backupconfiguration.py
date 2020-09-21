@@ -17,7 +17,8 @@ class TestBackupConfiguration(LoggedTestCase):
     """Unit tests for class BackupConfiguration."""
 
     def setUp(self):
-        self.json_meta = open('sample_instance_metadata.json').read()
+        with open('sample_instance_metadata.json') as f:
+            self.json_meta = f.read()
 
         self.meta = AzureVMInstanceMetadata(
             lambda: (json.JSONDecoder()).decode(self.json_meta)

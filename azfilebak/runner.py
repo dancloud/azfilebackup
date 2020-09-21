@@ -187,12 +187,12 @@ class Runner(object):
                 with pid.PidFile(pidname='fileset-backup-full') as _p:
                     backup_agent.backup(filesets=filesets, is_full=args.full_backup, force=force, rate=rate)
             except pid.PidFileAlreadyLockedError:
-                logging.warn("Skip full backup, already running")
+                logging.warning("Skip full backup, already running")
         elif args.restore:
             if args.restore.endswith('.tar.gz'):
                 # Restore using blob name
                 if filesets:
-                    logging.warn("Ignoring fileset (blob name provided)")
+                    logging.warning("Ignoring fileset (blob name provided)")
                 backup_agent.restore_blob(
                     blobname=args.restore,
                     output_dir=output_dir,

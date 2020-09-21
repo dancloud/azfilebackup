@@ -58,7 +58,7 @@ class Timing(object):
             """Sort by time diff, and secondary by stripe index when sorting full records."""
             if isinstance(a, type({})) and isinstance(b, type({})):
                 return Timing.time_diff_in_seconds(
-                    selector(b), selector(a)) or cmp(a.get('stripe_index'), b.get('stripe_index'))
+                    selector(b), selector(a)) or cmp(int(a.get('stripe_index') or 0), int(b.get('stripe_index') or 0))
             return Timing.time_diff_in_seconds(selector(b), selector(a))
         return sorted(times, key=cmp_to_key(sort_cmp))
 

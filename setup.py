@@ -18,6 +18,7 @@ setup(
         ]
     },
     install_requires=[
+        'future>=0.18.2',
         'pid>=2.2.0',
         'azure-storage-common>=1.3.0',
         'azure-storage-blob>=1.3.0,<=2.0.1',

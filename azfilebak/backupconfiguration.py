@@ -215,8 +215,8 @@ class BackupConfiguration(object):
                     token_credential=token_credential)
         
         logging.debug('Changing block sizes')
-        self._block_blob_service.MAX_SINGLE_PUT_SIZE = 128 * 1024 *1024
-        self._block_blob_service.MAX_BLOCK_SIZE = 50 * 1024 * 1024
-        self._block_blob_service.MIN_LARGE_BLOCK_UPLOAD_THRESHOLD = 50 * 1024 * 1024 + 1
+        self._block_blob_service.MAX_SINGLE_PUT_SIZE = 256 * 1024 *1024
+        self._block_blob_service.MAX_BLOCK_SIZE = 100 * 1024 * 1024
+        self._block_blob_service.MIN_LARGE_BLOCK_UPLOAD_THRESHOLD = 100 * 1024 * 1024 + 1
 
         return self._block_blob_service
